@@ -35,18 +35,56 @@ async function add(req, res){
     
 }
 
-async function listUsers(req, res){
+async function list(req, res){
     const users = await CustomersModel.find()
 
-    res.render('listUsers',{
+    res.render('list',{
         title: 'Listagem de usuários',
         users,
 })
 }
 
+async function indexEdit(req, res){
+    const {id} = req.query
+    
+    const user = await CustomersModel.findById(id)
+    
+    res.render('edit', {
+        title:'Editar Usuario',
+        user,
+    })   
+}
+
+async function edit(req, res){
+   
+    const{
+        name,
+        age,
+        email,
+    } = req.body
+
+    const {id} = req.params
+
+    const user = await CustomersModel.findById(id)
+
+    user.name = name
+    user.age = age
+    user.email = email
+
+    user.save()
+
+    res.render('edit',{
+        title:'Editar Usuário',
+        user,
+        message: 'Usuário alterado com sucesso.'
+    })
+}
 
 module.exports={
     index,
     add,
-    listUsers,
+    list,
+    // formEdit,
+    indexEdit,
+    edit,
 }
